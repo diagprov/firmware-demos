@@ -173,7 +173,7 @@ bool base64_decode(char* decoded_data,
 
 static void
 dump_name(const x509_name_t *name) {
-	char buf[100] = {0};
+	char buf[10] = {0};
 
 	for (size_t i = 0; i < name->num; i++) {
 		const x509_rdn_t *rdn = &name->rdns[i];
@@ -194,7 +194,7 @@ dump_name(const x509_name_t *name) {
 }
 
 void dump_certificate(const x509_cert_t *cert) {
-	char buf[10];
+	char buf[256];
 
     uart_tx_message("---\r\n");
 	sprintf(buf, "Version: %d, Algo: %d\r\n", cert->version, cert->signature.algorithm);
