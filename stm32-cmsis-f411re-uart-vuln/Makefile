@@ -56,6 +56,7 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c \
 Core/Src/system_stm32f4xx.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c \
+Core/Src/certlogic.c \
 asinine/src/asn1-oid.c \
 asinine/src/asn1-parser.c \
 asinine/src/asn1-types.c \

@@ -62,16 +62,19 @@ def selfsigned_certificate(emailAddress="emailAddress",
 
     return (crypto.dump_certificate(crypto.FILETYPE_ASN1, cert), q_der)
 
+def exploit_string(uintptr=4):
+    return "A"*uintptr
 
 def trigger_longnames():
 
     cert, key = selfsigned_certificate(emailAddress="",
-                                       commonName=random_string(28),
+                                       commonName=random_string(10)*(exploit_string()*5),
                                        countryName="CH",
-                                       localityName=random_string(28),
-                                       stateOrProvinceName=random_string(28),
-                                       organizationName=random_string(28),
-                                       organizationUnitName=random_string(28))
+                                       localityName=random_string(10)*(exploit_string()*5),
+                                       stateOrProvinceName=random_string(10)*(exploit_string()*5),
+                                       organizationName=random_string(10)*(exploit_string()*5),
+                                       organizationUnitName=random_string(10)*(exploit_string()*5))
+
 
     return encode_cert(cert)
 
