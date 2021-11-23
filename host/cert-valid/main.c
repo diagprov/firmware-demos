@@ -19,6 +19,7 @@
 
 void uart_tx_message(const char* message) {
     printf("%s", message);
+    fflush(stdout);
 }
 
 int main(int argc, char** argv) {

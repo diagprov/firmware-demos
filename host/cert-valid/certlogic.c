@@ -1,0 +1,1 @@
+../../stm32-cmsis-f411re-uart-valid/Core/Src/certlogic.c

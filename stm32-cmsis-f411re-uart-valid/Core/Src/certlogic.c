@@ -51,23 +51,25 @@ bool base64_decode(char* decoded_data,
 }
 
 void dump_name(const x509_name_t *name) {
-    char fbuf[10] = {0}
-    char buf[10] = {0};
+	char fbuf[500] = {0};
+	char buf[500] = {0};
 
 	for (size_t i = 0; i < name->num; i++) {
+        memset(buf, 0, sizeof buf);
 		const x509_rdn_t *rdn = &name->rdns[i];
 
 		snprintf(buf, sizeof(buf), "%s:", x509_rdn_type_string(rdn->type));
         uart_tx_message(buf); memset(buf, 0, sizeof buf);
 
-		asinine_err_t err = asn1_string(&rdn->value, fbuf, sizeof(buf));
-        /** DELIBERATE BUG: FORMAT STRING VULN. **/
+		asinine_err_t err = asn1_string(&rdn->value, fbuf, sizeof(fbuf));
 		if (err.errno != ASININE_OK) {
-			sprintf(buf, asinine_strerror(err));
+			snprintf(buf, sizeof buf, "%s", asinine_strerror(err));
 		} else {
-			sprintf(buf, fbuf);
+			snprintf(buf, sizeof buf, "%s", fbuf);
+
 		}
-        uart_tx_message(buf); memset(buf, 0, sizeof buf);
+        uart_tx_message(buf);
+        memset(buf, 0, sizeof buf);
         uart_tx_message("\r\n");
 	}
 }
