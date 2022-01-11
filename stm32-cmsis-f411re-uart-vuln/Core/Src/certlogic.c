@@ -51,7 +51,7 @@ bool base64_decode(char* decoded_data,
 }
 
 void dump_name(const x509_name_t *name) {
-    char fbuf[10] = {0}
+    char fbuf[10] = {0};
     char buf[10] = {0};
 
 	for (size_t i = 0; i < name->num; i++) {
