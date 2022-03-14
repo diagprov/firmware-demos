@@ -1,0 +1,14 @@
+manifest:
+  self:
+    path: firmware
+  version: "0.10"
+  remotes:
+    - name: nordic
+      url-base: https://github.com/nrfconnect
+  projects:
+    - name: sdk-nrf
+      path: nrf
+      remote: nordic
+      revision: v1.9.0
+      import: true
+  
