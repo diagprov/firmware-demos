@@ -1,0 +1,26 @@
+
+&spi1 {
+
+	status = "okay";
+	/* sck-pin =  <&gpioa 7 0>; */
+
+};
+
+&i2c1 {
+    label = "i2c";
+
+    bmp388: bmp388@77 {
+        compatible = "bosch,bmp388";
+        label = "BMP388_I2C";
+        status = "okay";
+        reg = <0x77>;
+    };
+};
+
+/ {
+aliases {
+    bmp388sensor = &bmp388;
+};
+
+};
+
