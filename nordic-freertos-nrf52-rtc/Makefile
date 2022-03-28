@@ -7,8 +7,8 @@ GNU_INSTALL_ROOT ?= /opt/arm/arm-eabi-latest/bin/
 GNU_VERSION ?= 10.3.0
 GNU_PREFIX ?= arm-none-eabi
 
-
-PROJ_DIR ?= `pwd`
+PWD=$(shell pwd)
+PROJ_DIR ?=$(PWD)
 
 $(OUTPUT_DIRECTORY)/nrf52840dk.out: \
   LINKER_SCRIPT  := nrf52840.ld
@@ -67,7 +67,7 @@ INC_FOLDERS += \
   freertos/source/include \
   freertos/config \
   sdk/components/libraries/util \
-  ../config \
+  config \
   sdk/components/libraries/balloc \
   sdk/components/libraries/ringbuf \
   sdk/modules/nrfx/hal \
