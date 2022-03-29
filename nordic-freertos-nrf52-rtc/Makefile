@@ -96,6 +96,16 @@ OPT = -O3 -g3
 # Uncomment the line below to enable link time optimization
 #OPT += -flto
 
+CC      := $($(GNU_INSTALL_ROOT)$(GNU_PREFIX)-gcc)
+CXX     := $($(GNU_INSTALL_ROOT)$(GNU_PREFIX)-c++)
+AS      := $($(GNU_INSTALL_ROOT)$(GNU_PREFIX)-as)
+AR      := $($(GNU_INSTALL_ROOT)$(GNU_PREFIX)-ar) -r
+LD      := $($(GNU_INSTALL_ROOT)$(GNU_PREFIX)-ld)
+NM      := $($(GNU_INSTALL_ROOT)$(GNU_PREFIX)-nm)
+OBJDUMP := $($(GNU_INSTALL_ROOT)$(GNU_PREFIX)-objdump)
+OBJCOPY := $($(GNU_INSTALL_ROOT)$(GNU_PREFIX)-objcopy)
+SIZE    := $($(GNU_INSTALL_ROOT)$(GNU_PREFIX)-size)
+
 # C flags common to all targets
 CFLAGS += $(OPT)
 CFLAGS += -DBOARD_PCA10056
@@ -177,3 +187,35 @@ SDK_CONFIG_FILE := config/sdk_config.h
 CMSIS_CONFIG_TOOL := sdk/external_tools/cmsisconfig/CMSIS_Configuration_Wizard.jar
 sdk_config:
 	java -jar $(CMSIS_CONFIG_TOOL) $(SDK_CONFIG_FILE)
+
+
+
+
+# Link object files
+%.out:
+  $(info $(call PROGRESS,Linking target: $@))
+  $(NO_ECHO)$(GENERATE_LD_INPUT_FILE)
+  $(NO_ECHO)$(CC) $(LDFLAGS) $(LD_INPUT) -Wl,-Map=$(@:.out=.map) -o $@
+  $(NO_ECHO)$(SIZE) $@
+
+# Create binary .bin file from the .out file
+%.bin: %.out
+  $(info Preparing: $@)
+  $(NO_ECHO)$(OBJCOPY) -O binary $< $@
+
+# Create binary .hex file from the .out file
+%.hex: %.out
+  $(info Preparing: $@)
+  $(NO_ECHO)$(OBJCOPY) -O ihex $< $@
+
+# Create object files from C source files
+build/%.o: %.c
+	$(CC) -std=c99,$(CFLAGS) -I$(INC_PATHS) -c $< -o $@
+
+# Create object files from C++ source files
+build/%.o: %.cpp
+	$(CXX) $(CFLAGS) $(CXXFLAGS) -I$(INC_PATHS) -c $< -o $@
+
+# Create object files from assembly source files
+%.S.o %.s.o.o:
+	$(CC) $(ASMFLAGS) -c $< -o $@

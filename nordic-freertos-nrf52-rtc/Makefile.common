@@ -189,8 +189,7 @@ endef
 # MAKE in version prior to 4.0 does not provide the $(file ...) function.
 define dump
 $(eval CONTENT_TO_DUMP := $(1)) \
-"$(MAKE)" -s --no-print-directory \
-  -f "$(TEMPLATE_PATH)/dump.mk" VARIABLE=CONTENT_TO_DUMP
+$(info $($(VARIABLE)))
 endef
 export CONTENT_TO_DUMP
 
@@ -216,17 +215,7 @@ $(info $(call PROGRESS,$(3) file: $(notdir $($@)))) \
 $(NO_ECHO)$(1) -MP -MD -c -o $@ $(call get_path,$($@)) $(2) $(INC_PATHS)
 endef
 
-# Create object files from C source files
-%.c.o:
-	$(call run,$(CC) -std=c99,$(CFLAGS),Compiling)
 
-# Create object files from C++ source files
-%.cpp.o:
-	$(call run,$(CXX),$(CFLAGS) $(CXXFLAGS),Compiling)
-
-# Create object files from assembly source files
-%.S.o %.s.o.o:
-	$(call run,$(CC) -x assembler-with-cpp,$(ASMFLAGS),Assembling)
 
 ifeq ($(PASS_LINKER_INPUT_VIA_FILE),1)
 GENERATE_LD_INPUT_FILE = $(call dump, $^ $(LIB_FILES)) > $(@:.out=.in)
@@ -236,21 +225,6 @@ GENERATE_LD_INPUT_FILE =
 LD_INPUT               = $^ $(LIB_FILES)
 endif
 
-# Link object files
-%.out:
-	$(info $(call PROGRESS,Linking target: $@))
-	$(NO_ECHO)$(GENERATE_LD_INPUT_FILE)
-	$(NO_ECHO)$(CC) $(LDFLAGS) $(LD_INPUT) -Wl,-Map=$(@:.out=.map) -o $@
-	$(NO_ECHO)$(SIZE) $@
 
-# Create binary .bin file from the .out file
-%.bin: %.out
-	$(info Preparing: $@)
-	$(NO_ECHO)$(OBJCOPY) -O binary $< $@
-
-# Create binary .hex file from the .out file
-%.hex: %.out
-	$(info Preparing: $@)
-	$(NO_ECHO)$(OBJCOPY) -O ihex $< $@
 
 endif # ifneq (,$(filter clean, $(MAKECMDGOALS)))
